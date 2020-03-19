@@ -4,10 +4,8 @@
 #include <string>
 using std::string;
 
-void sharding(const string &filename, int sharding_nums);
+void sharding(const string &filename, size_t sharding_nums);
 
-void map(int sharding_nums);
-
-void reduce();
+void mapReduce(size_t sharding_nums);
 
 #endif
