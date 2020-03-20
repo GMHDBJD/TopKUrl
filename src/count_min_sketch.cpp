@@ -2,12 +2,14 @@
 #include <functional>
 #include <bitset>
 #include <random>
+#include <iostream>
 
 #include "count_min_sketch.h"
 #include "heap.h"
 
 using std::endl;
 using std::hash;
+using std::cout;
 using std::ifstream;
 using std::make_pair;
 using std::min;
@@ -17,8 +19,8 @@ using std::pair;
 using std::string;
 using std::vector;
 
-constexpr size_t kD = 5;
-constexpr size_t kM = 100;
+constexpr size_t kD = 10;
+constexpr size_t kM = 300000;
 constexpr size_t kTopK = 100;
 
 void countMinSketch(string filename, size_t d, size_t m)
@@ -27,7 +29,7 @@ void countMinSketch(string filename, size_t d, size_t m)
     ifstream fin(filename);
     string url;
     Heap heap;
-    vector<pair<string, size_t>> result;
+    vector<pair<size_t, string>> result;
 
     while (fin >> url)
     {
@@ -38,12 +40,23 @@ void countMinSketch(string filename, size_t d, size_t m)
             min_val = min(min_val, ++sketch[i][ran() % m]);
         }
 
-        if (!heap.size() == kTopK && heap.front().second >= min_val)
-            continue;
-
-        if (!heap.increase(url))
+        if (heap.size() < kTopK)
         {
-            heap.push(make_pair(url, min_val));
+            if (!heap.increase(url))
+            {
+                heap.push(make_pair(min_val, url));
+            }
+        }
+        else
+        {
+            if (min_val > heap.front().first)
+            {
+                if (!heap.increase(url))
+                {
+                    heap.pop();
+                    heap.push(make_pair(min_val, url));
+                }
+            }
         }
     }
 
@@ -54,12 +67,21 @@ void countMinSketch(string filename, size_t d, size_t m)
 
     ofstream fout("count_min_sketch/result/result.out");
     for (int i = result.size() - 1; i >= 0; --i)
-        fout << result[i].first << ' ' << result[i].second << endl;
+        fout << result[i].second << ' ' << result[i].first << endl;
 }
 
 int main()
 {
     system("rm -rf ./count_min_sketch");
     system("mkdir count_min_sketch count_min_sketch/result");
+    clock_t t;
+
+    t = clock();
+    cout << "count min sketch..." << endl;
+
     countMinSketch("data/data.in", kD, kM);
+
+    t = clock() - t;
+    cout << "time taken in count min sketch: " << t / CLOCKS_PER_SEC << " seconds" << endl;
+
 }
