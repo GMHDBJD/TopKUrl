@@ -12,7 +12,7 @@ using std::ofstream;
 using std::string;
 using std::vector;
 
-constexpr size_t kFileSize = 1024 * 1024 * 1024;
+constexpr size_t kFileSize = 10ULL * 1024 * 1024 * 1024;
 
 string randomUrl()
 {
