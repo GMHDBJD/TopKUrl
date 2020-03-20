@@ -3,6 +3,6 @@
 int main()
 {
     unittest::Test test;
-    test.spaceSavingTest();
+    test.heapTest();
     return 0;
 }

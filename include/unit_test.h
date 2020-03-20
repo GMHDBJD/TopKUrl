@@ -39,10 +39,10 @@ public:
     {
         Heap heap;
 
-        heap.push({"aaaa", 1});
-        heap.push({"bbbb", 1});
-        heap.push({"cccc", 1});
-        heap.push({"dddd", 1});
+        heap.push({1, "aaaa"});
+        heap.push({1, "bbbb"});
+        heap.push({1, "cccc"});
+        heap.push({1, "dddd"});
 
         auto temp = heap.pop();
         cout << temp.first << " " << temp.second << endl;
@@ -60,7 +60,7 @@ public:
         temp = heap.pop();
         cout << temp.first << " " << temp.second << endl;
 
-        heap.push({"aaaa", 1});
+        heap.push({1, "aaaa"});
         temp = heap.pop();
         cout << temp.first << " " << temp.second << endl;
 
