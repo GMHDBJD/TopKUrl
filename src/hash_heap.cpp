@@ -1,12 +1,14 @@
 #include "hashing_heap.h"
 #include "heap.h"
 #include <fstream>
+#include <iostream>
 #include <functional>
 #include <unordered_map>
 #include <cstdlib>
 #include <queue>
 #include <algorithm>
 
+using std::cout;
 using std::endl;
 using std::greater;
 using std::hash;
@@ -52,27 +54,43 @@ void mapReduce(size_t sharding_nums)
 
         for (auto i : hashtable)
         {
-            heap.push(i);
+            heap.push(make_pair(i.second, i.first));
             if (heap.size() > kTopK)
                 heap.pop();
         }
 
         hashtable.clear();
     }
-    vector<pair<string, size_t>> result;
+    vector<pair<size_t, string>> result;
     while (!heap.empty())
     {
         result.push_back(heap.pop());
     }
     ofstream fout("hash_heap/result/result.out");
     for (int i = result.size() - 1; i >= 0; --i)
-        fout << result[i].first << ' ' << result[i].second << endl;
+        fout << result[i].second << ' ' << result[i].first << endl;
 }
 
 int main()
 {
     system("rm -rf ./hash_heap");
     system("mkdir hash_heap hash_heap/sharding hash_heap/result");
+
+    clock_t t;
+
+    t = clock();
+    cout << "sharding..." << endl;
+
     sharding(filename, kShardingNums);
+
+    t = clock() - t;
+    cout << "time taken in sharding: " << t / CLOCKS_PER_SEC << " seconds" << endl;
+
+    cout << "map reduce..." << endl;
+    t = clock();
+
     mapReduce(kShardingNums);
+
+    t = clock() - t;
+    cout << "time taken in map reduce: " << t / CLOCKS_PER_SEC << " seconds" << endl;
 }
