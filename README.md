@@ -35,7 +35,7 @@ Interview of PingCAP
 # 测试结果
 
 ## 测试环境
-ubuntu 18.04, 128GB固态硬盘
+ubuntu 18.04, 128GB固态硬盘  
 由于磁盘空间较小，使用10GB的文件进行测试，并用***unix***的***ulimit -v 100000***将内存限制为100MB
 
 ## 测试数据
