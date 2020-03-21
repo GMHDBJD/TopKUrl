@@ -1,4 +1,4 @@
-# TopKUrl
+#ave总运行时间为41分钟  TopKUrl
 Interview of PingCAP
 
 # 要求
@@ -21,7 +21,7 @@ Interview of PingCAP
 
 - 非确定性算法：
   - Count-Min Sketch
-    > 类似Bloom filter的思想，采用d个hash函数和m个切分，维护一个m*d的二维向量V，对于每个url，使用d个hash函数依次hash并模m，将V[hash_key][hash_value]的值加一。重新遍历每个url，对于每个url，找到最小的V[hash_key][hash_value]，该值即url的次数，并维护一个大小为K最小堆保存结果
+    > 类似Bloom filter的思想，采用d个hash函数和m个切分，维护一个m*d的二维向量V，对于每个url，使用d个hash函数依次hash并模m，将V[hash_key][hash_value]的值加一。重新遍历每个url，对于每个url，找到最小的V[hash_key][hash_value]，该值即url的次数，并维护一个大小为K最小堆保存结果。为了产生多个hash函数，使用std::hash得到每个url的种值，使用std::minstd_rand作为伪随机数生成器生成“哈希值”（故此Sketch实际只使用了一个hash函数）
 
     总共需要100GB的磁盘读操作。输出结果url的出现次数将会略大于实际次数。
 
@@ -30,8 +30,30 @@ Interview of PingCAP
 
     总共需要100GB的磁盘读操作。输出结果url的出现次数将会略大于实际次数。
 
+以上三个算法都需用到最小堆，且第二和第三个算法需要对堆进行查找和增值，所以自我实现了一个最小堆。
+
 # 测试结果
-由于磁盘空间较小，使用10GB的文件进行测试，并用***unix***的***ulimit -v 100000***将内存限制为100MB;
+## 测试数据
+从[moz](https://moz.com/top500)得到top500的url，通过generate_data.cpp产生随机分布，假设top500的url占全网总流量的1%，并且top500之间的权重为等差数列（第一的url权重为500，第2的url权重为499，...，第500的url权重为1）, 这样我们得到总权重$(1+500)*500/2*10=1252500$，第100的url概率约为$P=401/1252500$
+
+由于磁盘空间较小，使用10GB的文件进行测试，并用***unix***的***ulimit -v 100000***将内存限制为100MB
+- 对于哈希加最小堆的算法，将10GB的文件分成500个小文件，每个文件20MB
+- 对于Count-Min Sketch算法，选取d=10，m=1000000，整个Sketch占用内存为$10*1000000*4=40MB$，这样保证99%的概率下，总误差（所有元素查询误差的之和）小于0.027%
+- 对于Space Save算法，将堆的大小设为3200 > 1252500/401，保证堆中后100的url是正确的。
+
+## 运行时间
+- hash_heap总运行时间为1小时21分钟，其中sharding占了1个小时
+  ![](screenshot/hash_heap.jpg)
+- Count-Min Sketch总运行时间5.6分钟
+  ![](screenshot/count_min_sketch.jpg)
+- Space Save总运行时间为41分钟
+  ![](screenshot/space_save.jpg)
+
+可以看出Count-Min Sketch效率最高，hash_heap由于500个文件的读写操作，所用时间最多，Space Save因为堆中元素较多，每个url都要一次插入或增值，故效率不高，如果我们假设前500的url占全网总流量的99%，那么堆的大小只需100，效率将大幅提高。
+
+## 运行结果
+通过将后两个算法结果和hash_heap结果（左1）比较，可以看出最后排行是正确的，Count-Min Sketch中url出现的次数基本正确，而Space Save中的次数偏大。
+![](screenshot/result.png)
 
 
 
