@@ -5,6 +5,7 @@
 #include "hashing_heap.h"
 #include "count_min_sketch.h"
 #include "heap.h"
+#include "stream.h"
 #include "space_saving.h"
 
 #include <iostream>
@@ -78,6 +79,15 @@ public:
     void spaceSavingTest()
     {
         spaceSaving("data/data.in", 100);
+    }
+
+    void streamTest()
+    {
+        Stream istream("test/test.in", "r");
+        Stream ostream("test/test.out", "w");
+        string str;
+        while (istream >> str)
+            ostream << str << "\n";
     }
 };
 } // namespace unittest

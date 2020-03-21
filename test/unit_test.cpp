@@ -3,6 +3,6 @@
 int main()
 {
     unittest::Test test;
-    test.heapTest();
+    test.streamTest();
     return 0;
 }
