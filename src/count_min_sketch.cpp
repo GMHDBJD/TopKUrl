@@ -20,7 +20,7 @@ using std::string;
 using std::vector;
 
 constexpr size_t kD = 10;
-constexpr size_t kM = 300000;
+constexpr size_t kM = 1000000;
 constexpr size_t kTopK = 100;
 
 void countMinSketch(string filename, size_t d, size_t m)
