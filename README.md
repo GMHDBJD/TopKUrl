@@ -10,7 +10,7 @@ Interview of PingCAP
 # 实现方案
   - [x] 哈希加最小堆
   - [x] Count-Min Sketch
-  - [x] Space Saving
+  - [x] Space Save
 
 # 实现算法
 - 确定性算法：
