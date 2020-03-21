@@ -23,7 +23,7 @@ using std::unordered_map;
 using std::vector;
 
 const string filename = "data/data.in";
-constexpr size_t kShardingNums = 5;
+constexpr size_t kShardingNums = 500;
 constexpr size_t kTopK = 100;
 
 void sharding(const string &filename, size_t sharding_nums)
