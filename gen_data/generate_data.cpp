@@ -13,8 +13,14 @@ using std::string;
 using std::vector;
 
 constexpr size_t kFileSize = 10ULL * 1024 * 1024 * 1024;
+const string kInFilename = "gen_data/top500.in";
+const string kOutFilename = "data/data.in";
 
-string randomUrl()
+/*
+generate random url
+*/
+string
+randomUrl()
 {
     string s;
     for (int i = 0; i < 10; ++i)
@@ -30,16 +36,16 @@ int main()
     mt19937 gen;
     string url;
     size_t i = 500;
-    ifstream fin("gen_data/top500.in");
-    ofstream fout("data/data.in");
+    ifstream fin(kInFilename);
+    ofstream fout(kOutFilename);
 
     while (fin >> url)
     {
-        urls.push_back(url);
-        weights.push_back(i--);
+        urls.push_back(url);    // urls: top500
+        weights.push_back(i--); // weights: [500,499,...,1]
     }
 
-    weights.push_back(1122750);
+    weights.push_back(1122750); // assume top500/total = 1%
 
     discrete_distribution<int> dist(weights.begin(), weights.end());
     gen.seed(time(nullptr));

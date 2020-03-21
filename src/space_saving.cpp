@@ -19,7 +19,7 @@ void spaceSaving(string filename, size_t d)
 
     while (fin >> url)
     {
-        if (!heap.increase(url))
+        if (!heap.increase(url)) //if url not in heap, push it or replace the min one
         {
             if (heap.size() < d)
             {

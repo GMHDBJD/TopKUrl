@@ -7,9 +7,9 @@
 #include "count_min_sketch.h"
 #include "heap.h"
 
+using std::cout;
 using std::endl;
 using std::hash;
-using std::cout;
 using std::ifstream;
 using std::make_pair;
 using std::min;
@@ -33,6 +33,10 @@ void countMinSketch(string filename, size_t d, size_t m)
 
     while (fin >> url)
     {
+        /*
+            hash(url) as seed
+            generate d random value
+        */
         minstd_rand ran(hash<string>{}(url));
         size_t min_val = -1;
         for (int i = 0; i < d; i++)
@@ -83,5 +87,4 @@ int main()
 
     t = clock() - t;
     cout << "time taken in count min sketch: " << t / CLOCKS_PER_SEC << " seconds" << endl;
-
 }

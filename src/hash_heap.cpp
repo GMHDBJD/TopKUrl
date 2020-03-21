@@ -26,6 +26,9 @@ const string filename = "data/data.in";
 constexpr size_t kShardingNums = 500;
 constexpr size_t kTopK = 100;
 
+/*
+sharding file to small file by hash
+*/
 void sharding(const string &filename, size_t sharding_nums)
 {
     ifstream fin(filename);
@@ -39,6 +42,9 @@ void sharding(const string &filename, size_t sharding_nums)
     return;
 }
 
+/*
+count url in small file and write TopK to result
+*/
 void mapReduce(size_t sharding_nums)
 {
     Heap heap;
