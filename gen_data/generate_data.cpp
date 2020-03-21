@@ -31,6 +31,9 @@ randomUrl()
 
 int main()
 {
+    system("rm -rf ./data");
+    system("mkdir data");
+
     vector<string> urls;
     vector<size_t> weights;
     mt19937 gen;
