@@ -30,7 +30,7 @@ Interview of PingCAP
 
     总共需要100GB的磁盘读操作。输出结果url的出现次数将会略大于实际次数。
 
-以上三个算法都需用到最小堆，且第二和第三个算法需要对堆进行查找和增值，所以自我实现了一个最小堆。
+以上三个算法都需用到最小堆，且第二和第三个算法需要对堆进行查找和增值，所以自我实现了一个最小堆。自定义Stream，每次读写缓存16KB的block。
 
 # 测试结果
 
@@ -46,12 +46,20 @@ ubuntu 18.04, 128GB固态硬盘
 - 对于Space Save算法，将堆的大小设为3200 > 1252500/401，保证堆中后100的url是正确的。
 
 ## 运行时间
-- hash_heap总运行时间为1小时21分钟，其中sharding占了1个小时
-  ![](screenshot/hash_heap.jpg)
-- Count-Min Sketch总运行时间5.6分钟
-  ![](screenshot/count_min_sketch.jpg)
-- Space Save总运行时间为41分钟
-  ![](screenshot/space_save.jpg)
+- hash_heap总运行时间为42分钟
+  ![](screenshot/hash_heap.jpg)  
+  IO优化后总运行时间37分钟  
+  ![](screenshot/hash_heap_io.png)
+
+- Count-Min Sketch总运行时间5.6分钟  
+  ![](screenshot/count_min_sketch.jpg)  
+  IO优化后总运行时间5.4分钟  
+  ![](screenshot/count_min_sketch_io.png)
+
+- Space Save总运行时间为41分钟  
+  ![](screenshot/space_save.jpg)  
+  IO优化后总运行时间40分钟  
+  ![](screenshot/space_save_io.png)
 
 可以看出Count-Min Sketch效率最高，hash_heap由于500个文件的读写操作，所用时间最多，Space Save因为堆中元素较多，每个url都要一次插入或增值，故效率不高，如果我们假设前500的url占全网总流量的99%，那么堆的大小只需100，效率将大幅提高。
 
@@ -62,6 +70,5 @@ ubuntu 18.04, 128GB固态硬盘
 
 
 # 进一步优化（未完成）
-- 读取一整块block，再对block的内容处理
 - 分布式map_reduce
 - 多进程（消耗时间的主要是磁盘IO，故提升应该不大）
