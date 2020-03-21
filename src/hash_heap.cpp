@@ -1,5 +1,6 @@
 #include "hashing_heap.h"
 #include "heap.h"
+#include "stream.h"
 #include <fstream>
 #include <iostream>
 #include <functional>
@@ -31,13 +32,17 @@ sharding file to small file by hash
 */
 void sharding(const string &filename, size_t sharding_nums)
 {
-    ifstream fin(filename);
+    Stream fin(filename);
+    Stream fouts[kShardingNums];
+    for (int i = 0; i < kShardingNums; ++i)
+    {
+        fouts[i].open("hash_heap/sharding/" + to_string(i) + ".out", "w");
+    }
     string url;
     while (fin >> url)
     {
         size_t num = hash<string>{}(url) % sharding_nums;
-        ofstream fout("hash_heap/sharding/" + to_string(num) + ".out", ios::out | ios::app);
-        fout << url << endl;
+        fouts[num] << url << "\n";
     }
     return;
 }
@@ -51,9 +56,7 @@ void mapReduce(size_t sharding_nums)
     unordered_map<string, size_t> hashtable;
     for (int i = 0; i < sharding_nums; i++)
     {
-        ifstream fin("hash_heap/sharding/" + to_string(i) + ".out");
-        if (!fin.is_open())
-            continue;
+        Stream fin("hash_heap/sharding/" + to_string(i) + ".out");
         string url;
         while (fin >> url)
             hashtable[url]++;

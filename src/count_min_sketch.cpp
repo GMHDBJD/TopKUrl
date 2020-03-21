@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "count_min_sketch.h"
+#include "stream.h"
 #include "heap.h"
 
 using std::cout;
@@ -26,7 +27,7 @@ constexpr size_t kTopK = 100;
 void countMinSketch(string filename, size_t d, size_t m)
 {
     vector<vector<size_t>> sketch(d, vector<size_t>(m));
-    ifstream fin(filename);
+    Stream fin(filename);
     string url;
     Heap heap;
     vector<pair<size_t, string>> result;

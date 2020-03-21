@@ -1,6 +1,7 @@
 #include "heap.h"
 #include <fstream>
 #include <iostream>
+#include "stream.h"
 
 using std::cout;
 using std::endl;
@@ -12,7 +13,7 @@ constexpr size_t kD = 3200;
 
 void spaceSaving(string filename, size_t d)
 {
-    ifstream fin(filename);
+    Stream fin(filename);
     string url;
     Heap heap;
     vector<pair<size_t, string>> result;
